@@ -31,6 +31,8 @@ const atRuleNameRegExp = /^@[^ ]+/
  * @api private
  */
 export default function createRule(selector, style = {}, options = {}) {
+  if (options.named == null) options.named = true
+
   // Is an at-rule.
   if (selector && selector[0] === '@') {
     const name = atRuleNameRegExp.exec(selector)[0]
@@ -38,7 +40,6 @@ export default function createRule(selector, style = {}, options = {}) {
     return new AtRule(selector, style, options)
   }
 
-  if (options.named == null) options.named = true
   return new Rule(selector, style, options)
 }
 

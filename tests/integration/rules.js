@@ -148,16 +148,43 @@ describe('Integration: rules', () => {
       expect(rule.toString()).to.be('@namespace svg url(http://www.w3.org/2000/svg);')
     })
 
-    it('should return CSS from @keyframes rule', () => {
-      const rule = jss.createRule('@keyframes id', {
+    it('should return CSS from @keyframes named rule', () => {
+      const rule = jss.createRule('@keyframes a', {
         from: {top: 0},
         '30%': {top: 30},
         '60%, 70%': {top: 80}
       })
       expect(rule.type).to.be('keyframe')
-      expect(rule.selector).to.be('@keyframes id')
+      expect(rule.name).to.be('a')
+      expect(rule.id).to.be('a-359067163')
+      expect(rule.selector).to.be('@keyframes a-359067163')
       const css =
-        '@keyframes id {\n' +
+        '@keyframes a-359067163 {\n' +
+        '  from {\n' +
+        '    top: 0;\n' +
+        '  }\n' +
+        '  30% {\n' +
+        '    top: 30;\n' +
+        '  }\n' +
+        '  60%, 70% {\n' +
+        '    top: 80;\n' +
+        '  }\n' +
+        '}'
+      expect(rule.toString()).to.be(css)
+    })
+
+    it('should return CSS from @keyframes unnamed rule', () => {
+      const rule = jss.createRule('@keyframes a', {
+        from: {top: 0},
+        '30%': {top: 30},
+        '60%, 70%': {top: 80}
+      }, {named: false})
+      expect(rule.type).to.be('keyframe')
+      expect(rule.name).to.be('a')
+      expect(rule.id).to.be('a')
+      expect(rule.selector).to.be('@keyframes a')
+      const css =
+        '@keyframes a {\n' +
         '  from {\n' +
         '    top: 0;\n' +
         '  }\n' +

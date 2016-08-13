@@ -1,3 +1,5 @@
+import {hashObject} from '../utils'
+
 /**
  * Keyframe rule.
  *
@@ -6,7 +8,9 @@
 export default class KeyframeRule {
   constructor(selector, frames, options) {
     this.type = 'keyframe'
-    this.selector = selector
+    this.name = selector.split(' ')[1]
+    this.id = options.named ? `${this.name}-${hashObject(frames)}` : this.name
+    this.selector = `@keyframes ${this.id}`
     this.options = options
     this.frames = this.formatFrames(frames)
   }

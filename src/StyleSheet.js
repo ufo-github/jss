@@ -39,7 +39,10 @@ export default class StyleSheet {
       this.createAndRegisterRule(name, rules[name])
     }
 
+    // We iterate rules object instead of this.rules, because this.rules
+    // contains rules twice, referenced by selector and by name.
     for (const name in rules) {
+      console.log(name, this.rules[name])
       this.options.jss.plugins.run(this.rules[name])
     }
   }

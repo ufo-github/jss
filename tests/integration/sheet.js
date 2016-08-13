@@ -53,6 +53,26 @@ describe('Integration: sheet', () => {
       const sheet = jss.createStyleSheet({a: {float: 'left'}}, {named: false})
       expect(sheet.getRule('a')).to.be.a(Rule)
     })
+
+    it('should return a @keyframes rule from named sheet', () => {
+      const sheet = jss.createStyleSheet({
+        '@keyframes a': {
+          from: {opacity: 0},
+          to: {opacity: 1}
+        }
+      })
+      expect(sheet.getRule('a').id).to.be('a-976495528')
+    })
+
+    it('should return a @keyframes rule from unnamed sheet', () => {
+      const sheet = jss.createStyleSheet({
+        '@keyframes a': {
+          from: {opacity: 0},
+          to: {opacity: 1}
+        }
+      }, {named: false})
+      expect(sheet.getRule('a').id).to.be('a')
+    })
   })
 
   describe('sheet.toString()', () => {
@@ -68,7 +88,7 @@ describe('Integration: sheet', () => {
           'font-family': 'MyHelvetica',
           src: 'local("Helvetica")'
         },
-        '@keyframes id': {
+        '@keyframes name': {
           from: {top: 0}
         },
         '@media print': {
@@ -87,7 +107,7 @@ describe('Integration: sheet', () => {
         '@namespace bla;\n' +
         '.a {\n  float: left;\n}\n' +
         '@font-face {\n  font-family: MyHelvetica;\n  src: local("Helvetica");\n}\n' +
-        '@keyframes id {\n  from {\n    top: 0;\n  }\n}\n' +
+        '@keyframes name {\n  from {\n    top: 0;\n  }\n}\n' +
         '@media print {\n  button {\n    display: none;\n  }\n}\n' +
         '@supports ( display: flexbox ) {\n  button {\n    display: none;\n  }\n}'
       )
@@ -195,6 +215,33 @@ describe('Integration: sheet', () => {
         '}'
       )
     })
+
+    it('should reference a @keyframes rule in named sheet', () => {
+      const sheet = jss.createStyleSheet({
+        '@keyframes button-animation': {
+          from: {opacity: 0},
+          to: {opacity: 1}
+        },
+        button: {
+          animationName: '$button-animation'
+        }
+      })
+      expect(sheet.toString()).to.be(
+        '@keyframes button-animation-976495528 {\n' +
+        '  from {\n' +
+        '    opacity: 0;\n' +
+        '  }\n' +
+        '  to {\n' +
+        '    opacity: 1;\n' +
+        '  }\n' +
+        '}\n' +
+        '.button-id {\n' +
+        '  animationName: button-animation-976495528;\n' +
+        '}'
+      )
+      console.log(sheet.toString())
+    })
+
 
     describe('skip empty rules', () => {
       it('should skip empty rules', () => {

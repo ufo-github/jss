@@ -4,6 +4,7 @@ import SheetsRegistry from './SheetsRegistry'
 import createRule from './createRule'
 import findRenderer from './findRenderer'
 import {generateClassName} from './utils'
+import animationName from './plugins/animationName'
 
 /**
  * Main Jss class.
@@ -36,6 +37,7 @@ export default class Jss {
    */
   setup(options = {}) {
     this.generateClassName = options.generateClassName || generateClassName
+    this.use(animationName())
     if (options.plugins) {
       options.plugins.forEach(plugin => {
         this.use(plugin)

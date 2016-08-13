@@ -1,5 +1,11 @@
 import createHash from 'murmurhash-js/murmurhash3_gc'
 
+const {stringify} = JSON
+
+export function hashObject(object) {
+  return createHash(stringify(object))
+}
+
 /**
  * Generates a class name using murmurhash.
  *
